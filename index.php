@@ -1,104 +1,81 @@
 <?php
+header('Content-Type: text/html; charset=UTF-8');
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {  
+  if (!empty($_GET['save'])) {
+    print('Спасибо, результаты сохранены.');
+  }
+  include('form.php');
+  exit();
+}
+ 
+$name = $_POST['name'];
+$email = $_POST['email'];
+$date = $_POST['date'];
+$radio1 = $_POST['radio-group-1'];
+$radio2 = $_POST['radio-group-2'];
+$power = implode(',', $_POST['superpowers']);
+$bio = $_POST['biography'];
+$check1 = $_POST['check-1'];
 
-$method = $_SERVER['REQUEST_METHOD'];
-
-//Script Foreach
-$c = true;
-if ( $method === 'POST' ) {
-
-	$project_name = trim($_POST["project_name"]);
-	$admin_email  = trim($_POST["dan10157@bk.ru"]);
-	$form_subject = trim($_POST["form_subject"]);
-
-	foreach ( $_POST as $key => $value ) {
-		if ( $value != "" && $key != "project_name" && $key != "dan10157@bk.ru" && $key != "form_subject" ) {
-			$message .= "
-			" . ( ($c = !$c) ? '<tr>':'<tr style="background-color: #f8f8f8;">' ) . "
-				<td style='padding: 10px; border: #e9e9e9 1px solid;'><b>$key</b></td>
-				<td style='padding: 10px; border: #e9e9e9 1px solid;'>$value</td>
-			</tr>
-			";
-		}
-	}
-} else if ( $method === 'GET' ) {
-
-	$project_name = trim($_GET["project_name"]);
-	$admin_email  = trim($_GET["dan10157@bk.ru"]);
-	$form_subject = trim($_GET["form_subject"]);
-
-	foreach ( $_GET as $key => $value ) {
-		if ( $value != "" && $key != "project_name" && $key != "dan10157@bk.ru" && $key != "form_subject" ) {
-			$message .= "
-			" . ( ($c = !$c) ? '<tr>':'<tr style="background-color: #f8f8f8;">' ) . "
-				<td style='padding: 10px; border: #e9e9e9 1px solid;'><b>$key</b></td>
-				<td style='padding: 10px; border: #e9e9e9 1px solid;'>$value</td>
-			</tr>
-			";
-		}
-	}
+$errors = FALSE;
+if ($name=='') {
+  print('Заполните имя.<br/>');
+  $errors = TRUE;
 }
 
-$message = "<table style='width: 100%;'>$message</table>";
-
-function adopt($text) {
-	return '=?UTF-8?B?'.Base64_encode($text).'?=';
+if ($email=='') {
+  print('Заполните email.<br/>');
+  $errors = TRUE;
 }
 
-$headers = "MIME-Version: 1.0" . PHP_EOL .
-"Content-Type: text/html; charset=utf-8" . PHP_EOL .
-'From: '.adopt($project_name).' <'.$admin_email.'>' . PHP_EOL .
-'Reply-To: '.$admin_email.'' . PHP_EOL;
-
-mail($admin_email, adopt($form_subject), $message, $headers );
-<?php
-
-$method = $_SERVER['REQUEST_METHOD'];
-
-//Script Foreach
-$c = true;
-if ( $method === 'POST' ) {
-
-	$project_name = $modx->getOption('site_name');
-	$admin_email  = $modx->getOption('dan10157@bk.ru');
-	$form_subject = "Заявка с сайта " . $modx->getOption('site_name') . "";
-
-	foreach ( $_POST as $key => $value ) {
-		if ( $value != "" && $key != "project_name" && $key != "dan10157@bk.ru" && $key != "form_subject" ) {
-			$message .= "
-			" . ( ($c = !$c) ? '<tr>':'<tr style="background-color: #f8f8f8;">' ) . "
-				<td style='padding: 10px; border: #e9e9e9 1px solid;'><b>$key</b></td>
-				<td style='padding: 10px; border: #e9e9e9 1px solid;'>$value</td>
-			</tr>
-			";
-		}
-	}
-} else if ( $method === 'GET' ) {
-
-	$project_name = trim($_GET["project_name"]);
-	$admin_email  = trim($_GET["dan10157@bk.ru"]);
-	$form_subject = trim($_GET["form_subject"]);
-
-	foreach ( $_GET as $key => $value ) {
-		if ( $value != "" && $key != "project_name" && $key != "dan10157@bk.ru" && $key != "form_subject" ) {
-			$message .= "
-			" . ( ($c = !$c) ? '<tr>':'<tr style="background-color: #f8f8f8;">' ) . "
-				<td style='padding: 10px; border: #e9e9e9 1px solid;'><b>$key</b></td>
-				<td style='padding: 10px; border: #e9e9e9 1px solid;'>$value</td>
-			</tr>
-			";
-		}
-	}
+if ($date=='') {
+  print('Заполните дату рождения.<br/>');
+  $errors = TRUE;
 }
 
-$message = "<table style='width: 100%;'>$message</table>";
-
-function adopt($text) {
-	return '=?UTF-8?B?'.Base64_encode($text).'?=';
+if ($radio1=='') {
+  print('Заполните данные.<br/>');
+  $errors = TRUE;
 }
 
-$headers = "MIME-Version: 1.0" . PHP_EOL .
-"Content-Type: text/html; charset=utf-8" . PHP_EOL .
-'From: '.adopt($project_name).' <'.$admin_email.'>' . PHP_EOL .
-'Reply-To: '.$admin_email.'' . PHP_EOL;
+if ($radio2=='') {
+  print('Заполните данные.<br/>');
+  $errors = TRUE;
+}
 
-mail($admin_email, adopt($form_subject), $message, $headers );
+if ($power=='') {
+  print('Заполните данные.<br/>');
+  $errors = TRUE;
+}
+
+if ($bio=='') {
+  print('Заполните биографию.<br/>');
+  $errors = TRUE;
+}
+
+if ($check1=='') {
+  print('Примите условия.<br/>');
+  $errors = TRUE;
+}
+
+if ($errors) {
+  exit();
+}
+
+$user = 'u25741';
+$pass = '4353245';
+$db = new PDO('mysql:host=localhost;dbname=u25741', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+
+// Подготовленный запрос. Не именованные метки.
+try {
+    $stmt = $db->prepare("INSERT INTO clients SET name = ?, email = ?, date = ?, gender = ?, limbs = ?, bio = ?, policy = ?");
+    $stmt->execute(array($name, $email, $date, $radio1, $radio2, $bio, $check1));
+    $user_id = $db->lastInsertId();
+
+    $superpowers = $db->prepare("INSERT INTO powers SET powers = ?, user_id = ? ");
+    $superpowers->execute(array($power, $user_id));
+} catch (PDOException $e) {
+    print('Error : ' . $e->getMessage());
+    exit();
+}
+header('Location: ?save=1');
